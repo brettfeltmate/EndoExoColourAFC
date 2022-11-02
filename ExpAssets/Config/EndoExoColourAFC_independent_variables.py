@@ -2,68 +2,22 @@ from klibs.KLIndependentVariable import IndependentVariableSet
 
 EndoExoColourAFC_ind_vars = IndependentVariableSet()
 
-"""
-*** SAMPLE CONFIGURATION - REMOVE AFTER FINISHING REAL CONFIG ***
 
-First we create an IndependentVariableSet object that will group together all the independent variables the experiment
-will use, like so:
+# Indicates if alerting signal involves a shift in intensity (volume)
+EndoExoColourAFC_ind_vars.add_variable('signal_intensity', str)
+EndoExoColourAFC_ind_vars['signal_intensity'].add_values('lo', 'hi')
 
->> EndoExoColourAFC_ind_vars = IndependentVariableSet()
+# Time between cue onset (visual & audio) and target onset
+EndoExoColourAFC_ind_vars.add_variable('cue_value', str)
+EndoExoColourAFC_ind_vars['cue_value'].add_values('short', 'long')
 
-Then we create empty variables within this set. At this point we're not providing any values, just a name and a data
-type that will tell klibs that this variable exists and what pythonic data type it should expect that variable's values
-to hold. In this example we create four variables, one for each type.
+# Indicates if cue accurately reflects target onset
+EndoExoColourAFC_ind_vars.add_variable('cue_valid', str)
+EndoExoColourAFC_ind_vars['cue_valid'].add_values(("valid", 8), "invalid_short", "invalid_long")
 
->> EndoExoColourAFC_ind_vars.add_variable("color", str)
->> EndoExoColourAFC_ind_vars.add_variable("size", float)
->> EndoExoColourAFC_ind_vars.add_variable("active", bool)
->> EndoExoColourAFC_ind_vars.add_variable("count", int)
+# Indicates if catch or true trial
+EndoExoColourAFC_ind_vars.add_variable('catch_trial', bool)
+EndoExoColourAFC_ind_vars['catch_trial'].add_values((False, 3), True)
 
-Finally, we add values to each variable. This can be done one at a time, as in the colors example below:
 
->> EndoExoColourAFC_ind_vars['color'].add_value("blue")
->> EndoExoColourAFC_ind_vars['color'].add_value("blue")
->> EndoExoColourAFC_ind_vars['color'].add_value("blue")
 
-Or altogether in a comma-separated set, as in the 'count' example:
-
->> EndoExoColourAFC_ind_vars['count'].add_values(1,2,3,4,5)
-
-Finally, values can have a distribution attached to them in case some values should feature more or less frequently, with
-respect to one and other, in the experiment. For example, if we wanted to have the 'size' variable be either 1.0 or 2.0
-occur more frequently than 5.0, we could add these values as such:
-
->> EndoExoColourAFC_ind_vars['size'].add_value(1.0, 2)
->> EndoExoColourAFC_ind_vars['size'].add_value(2.0, 2)
->> EndoExoColourAFC_ind_vars['size'].add_value(5.0)
-
-Note that the there is no distribution value included for the third option. By default, every value has a distribution of
-1. You only need to set the distribution when it is larger than 1.
-
-Now, for every 5 trials that are generated from this IndependentVariableSet, only one of them will have 5.0 as the value
-of the 'size' independent variable.
-
-Adding distributions to values is also possible when adding values as a set by creating a tuple for each value, like so:
-
->> EndoExoColourAFC_ind_vars['active'].add_values((True, 5), False)
-
-which is equivalent to:
-
->> EndoExoColourAFC_ind_vars['active'].add_value(True, 5)
->> EndoExoColourAFC_ind_vars['active'].add_value(False)
-
-As a final note, you may wish to selectively exclude certain values or even entire independent variables during development
-and testing. By default, all IndependentVariables and their values are enabled, but you can disable them by toggling their
-enabled parameter:
-
->> EndoExoColourAFC_ind_vars['size'].enabled = False
-
-Now there will be no contribution for the 'size' independent variable during trial generation. Note that this independent
-variable will still exist at runtime (ie. the Experiment class will be able to reference 'self.size' but it's value will
-be None and will not change between trials.
-
-Similarly, individual values can also be disabled.
-
->> EndoExoColourAFC_ind_vars['size'][1.0].enabled = False
-
-"""

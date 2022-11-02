@@ -39,8 +39,8 @@ saccadic_motion_threshold = 0.15
 # Experiment Structure
 #########################################
 multi_session_project = False
-trials_per_block = 0
-blocks_per_experiment = 1
+trials_per_block = 160
+blocks_per_experiment = 2
 table_defaults = {}
 conditions = []
 default_condition = None
@@ -65,3 +65,19 @@ datafile_ext = ".txt"
 #########################################
 # PROJECT-SPECIFIC VARS
 #########################################
+# Event & stimulus durations
+fixation_min = 2000
+fixation_mean = 4000
+fixation_max = 6000
+target_duration = 50
+mask_duration = 1000
+cue_duration = 100
+discrimination_timeout = 5000
+feedback_duration = 1000
+ITI = 1000
+
+# Stimulus dimensions
+cue_size = 0.02
+target_size = 1
+wheel_size = [6.0, 1]  # Diameter, Thickness
+cursor_size = [0.5, 0.1]
