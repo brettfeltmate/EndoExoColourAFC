@@ -195,7 +195,6 @@ class EndoExoColourAFC(klibs.Experiment):
 			"cue_valid": CATCH if self.catch_trial else self.cue_valid,
 			"signal_intensity": self.signal_intensity,
 			"target_rgb": CATCH if self.catch_trial else self.target_rgb,
-			"response_rgb": CATCH if self.catch_trial else detection.value[1],
 			"discrimination_rt": CATCH if self.catch_trial else discrimination.rt,
 			"discrimination_error": CATCH if self.catch_trial else discrimination.value[0]
 		}
@@ -292,9 +291,11 @@ class EndoExoColourAFC(klibs.Experiment):
 		# Initialize pen to draw cell outlines
 		transparent_pen = aggdraw.Pen((0, 0, 0), cell_outline_width)
 
+		count = int(math.sqrt(cells))
+
 		# Generate cells, arranged in 4x4 array
-		for row in range(cell_size):
-			for col in range(cell_size):
+		for row in range(count):
+			for col in range(count):
 				# Randomly select colour for each cell
 				cell_colour = const_lum[random.randrange(0, 360)]
 				# Brush to apply colour

@@ -60,7 +60,6 @@ CREATE TABLE trials (
     cue_valid text not null,
     signal_intensity text not null,
     target_rgb text not null,
-    response_rgb text not null,
     discrimination_error text not null,
     discrimination_rt text not null
 );
