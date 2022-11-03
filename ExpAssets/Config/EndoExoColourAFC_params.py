@@ -40,7 +40,7 @@ saccadic_motion_threshold = 0.15
 #########################################
 multi_session_project = False
 trials_per_block = 160
-blocks_per_experiment = 2
+blocks_per_experiment = 3
 table_defaults = {}
 conditions = []
 default_condition = None
@@ -69,7 +69,7 @@ datafile_ext = ".txt"
 fixation_min = 2000
 fixation_mean = 4000
 fixation_max = 6000
-target_duration = 50
+target_duration = 33
 mask_duration = 1000
 cue_duration = 100
 discrimination_timeout = 5000
@@ -78,6 +78,6 @@ ITI = 1000
 
 # Stimulus dimensions
 cue_size = 0.02
-target_size = 1
+target_size = 2
 wheel_size = [6.0, 1]  # Diameter, Thickness
 cursor_size = [0.5, 0.1]
