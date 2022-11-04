@@ -67,7 +67,7 @@ class EndoExoColourAFC(klibs.Experiment):
 
 		# Stimulus objects
 		self.stims = {
-			LONG: message('-------', style=CUE, location=P.screen_c, registration=5, blit_txt=False),
+			LONG: message('----------------', style=CUE, location=P.screen_c, registration=5, blit_txt=False),
 			SHORT: message('----', style=CUE, location=P.screen_c, registration=5, blit_txt=False),
 			TARGET: kld.Rectangle(width=self.sizes[TARGET]),
 			WHEEL: kld.ColorWheel(diameter=self.sizes[WHEEL][0], thickness=self.sizes[WHEEL][1], auto_draw=False),
@@ -92,6 +92,15 @@ class EndoExoColourAFC(klibs.Experiment):
 		self.rc_wheel.display_callback = self.discrimination_callback
 
 	def trial_prep(self):
+		# Provide quarterly breaks during testing blocks
+		if not P.practicing and P.trial_number > 1:
+			if P.trial_number % (P.trials_per_block / 4) == 1:
+				fill()
+				message("Good job!\nTake a break!\nPress any key to continue...", location=P.screen_c, registration=5,
+				        blit_txt=True)
+				flip()
+
+				any_key()
 		# Given the cue presented (short, long),
 		# and it's validity for this trial, extract the appropriate CTOA duration
 		self.ctoa = self.ctoa_map[self.cue_value][self.cue_valid] if not self.catch_trial else 1600
