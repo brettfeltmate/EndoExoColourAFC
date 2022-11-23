@@ -40,6 +40,10 @@ class EndoExoColourAFC(klibs.Experiment):
 
 	def setup(self):
 
+		#self.trial_factory = TrialFactory()
+
+		self.target_duration = 100
+
 		# Cue-Target Onset Asynchrony factor labels and their respective durations
 		self.ctoa_map = {
 			SHORT: {
@@ -80,16 +84,21 @@ class EndoExoColourAFC(klibs.Experiment):
 		self.rc_wheel.color_listener.color_response = True
 
 		if P.run_practice_blocks:
-			self.insert_practice_block(1, trial_counts=15)
+			self.insert_practice_block(1, trial_counts=P.trials_per_practice_block, factor_mask={'catch_trial': [False]})
+
+		self.say_welcome = True
 
 	def block(self):
 		if P.practicing:
-			fill()
-			message(
-				"Welcome to the task. \n Use the auditory warning signals to prepare for whichever time interval is indicated. \n Respond as quickly as possible, and pick the target colour to the best of your ability. \n Press any key to begin the experiment.",
-				location=P.screen_c,
-				registration=5, blit_txt=True)
-			flip()
+			if self.say_welcome:
+				fill()
+				message(
+					"Welcome to the task. \n Use the auditory warning signals to prepare for whichever time interval is indicated. \n Respond as quickly as possible, and pick the target colour to the best of your ability. \n Press any key to begin the experiment.",
+					location=P.screen_c,
+					registration=5, blit_txt=True)
+				flip()
+				self.say_welcome = False
+
 
 			any_key()
 		# anything you want them to see on first exp block
@@ -164,7 +173,7 @@ class EndoExoColourAFC(klibs.Experiment):
 		events.append([self.fixation_duration, 'play_alerting_signal'])
 		events.append([events[-1][0] + P.cue_duration, 'stop_alerting_signal'])
 		events.append([events[-1][0] + self.ctoa, 'target_on'])
-		events.append([events[-1][0] + P.target_duration, 'mask_on'])
+		events.append([events[-1][0] + self.target_duration, 'mask_on'])
 		events.append([events[-1][0] + P.mask_duration, 'response_period'])
 
 		for e in events:
@@ -251,6 +260,9 @@ class EndoExoColourAFC(klibs.Experiment):
 			ui_request()
 
 		self.trial_audio.stop()
+
+		if P.practicing and P.trial_number == P.trials_per_practice_block:
+			self.performance_check()
 
 	def clean_up(self):
 		pass
@@ -349,3 +361,69 @@ class EndoExoColourAFC(klibs.Experiment):
 		surface.flush()
 
 		return np.asarray(canvas)
+
+	def performance_check(self):
+		print("Performance check")
+		print("Prior target duration: {}".format(self.target_duration))
+
+		#  get mean error
+		error = self.get_error()
+		print('mean error = {}'.format(error))
+
+		more_practice_needed = True
+
+		# If target duration at max, and error is still too high, abort experiment
+		if self.target_duration == 150:
+			if error > 50:
+				message("Please inform the researcher that you suck.", registration=5, location=P.screen_c, flip_screen=True)
+				any_key()
+				quit()
+
+		# If target duration at min, check for poor performance (upping duration if so), otherwise proceed with testing.
+		elif self.target_duration == 33:
+			if error > 50:
+				self.target_duration = 67
+			else:
+				more_practice_needed = False
+
+		# Next two higher clauses refer to middling durations,
+		# If above/below performance thresholds, adjust duration accordingly
+		elif self.target_duration == 100:
+			if error > 50:
+				self.target_duration = 150
+
+			elif error < 30:
+				self.target_duration = 67
+
+			else:
+				more_practice_needed = False
+
+		else:  # target duration here == 67ms
+			if error < 30:
+				self.target_duration = 33
+			elif error > 50:
+				self.target_duration = 100
+				more_practice_needed = False
+			else:
+				more_practice_needed = False
+
+		print("Adjusted target duration: {}".format(self.target_duration))
+
+		if more_practice_needed:
+			self.trial_factory.insert_block(
+				block_num=P.block_number + 1,
+				practice=True,
+				trial_count=P.trials_per_practice_block,
+				factor_mask={'catch_trial': [False]}
+			)
+
+	def get_error(self):
+		try:
+			val = self.db.query(
+				"SELECT discrimination_error FROM trials WHERE participant_id = {0} AND block_num = {1}".format(
+					P.participant_id, P.block_number), fetch_all=True)
+			vals = [float(v[0]) for v in val]
+
+			return np.mean(np.abs(vals))
+		except IndexError:
+			return 0

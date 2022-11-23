@@ -65,6 +65,8 @@ datafile_ext = ".txt"
 #########################################
 # PROJECT-SPECIFIC VARS
 #########################################
+trials_per_practice_block = 5
+
 # Event & stimulus durations
 fixation_min = 2000
 fixation_mean = 4000
