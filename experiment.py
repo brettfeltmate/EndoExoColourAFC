@@ -387,8 +387,7 @@ class EndoExoColourAFC(klibs.Experiment):
 		elif self.target_duration == 33:
 			if error > 50:
 				self.target_duration = 67
-			else:
-				more_practice_needed = False
+			more_practice_needed = False
 
 		# Next two higher clauses refer to middling durations,
 		# If above/below performance thresholds, adjust duration accordingly
@@ -426,7 +425,14 @@ class EndoExoColourAFC(klibs.Experiment):
 			val = self.db.query(
 				"SELECT discrimination_error FROM trials WHERE participant_id = {0} AND block_num = {1}".format(
 					P.participant_id, P.block_number), fetch_all=True)
-			vals = [float(v[0]) for v in val]
+
+			vals = []
+			for v in val:
+				try:
+					vals.append(float(v[0]))
+				except ValueError:
+					pass
+
 
 			return np.mean(np.abs(vals))
 		except IndexError:
