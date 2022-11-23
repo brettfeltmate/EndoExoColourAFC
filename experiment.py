@@ -380,6 +380,9 @@ class EndoExoColourAFC(klibs.Experiment):
 				any_key()
 				quit()
 
+			else:
+				more_practice_needed = False
+
 		# If target duration at min, check for poor performance (upping duration if so), otherwise proceed with testing.
 		elif self.target_duration == 33:
 			if error > 50:
