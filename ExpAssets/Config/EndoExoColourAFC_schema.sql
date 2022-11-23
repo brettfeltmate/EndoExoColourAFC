@@ -56,6 +56,7 @@ CREATE TABLE trials (
     block_num integer not null,
     trial_num integer not null,
     fix_duration integer not null,
+    target_duration integer not null,
     ctoa integer not null,
     cue_valid text not null,
     signal_intensity text not null,

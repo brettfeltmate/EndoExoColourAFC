@@ -237,6 +237,7 @@ class EndoExoColourAFC(klibs.Experiment):
 			"block_num": P.block_number,
 			"trial_num": P.trial_number,
 			"fix_duration": self.fixation_duration,
+			"target_duration": self.target_duration,
 			"ctoa": self.ctoa,
 			"cue_valid": CATCH if self.catch_trial else self.cue_valid,
 			"signal_intensity": self.signal_intensity,
